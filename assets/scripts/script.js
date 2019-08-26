@@ -27,51 +27,31 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Gifs
     // Preloader
-    let gifPreloader = new AnimatedGif([
-        "./assets/images/animations/Preloader/Preloader_01.png",
-        "./assets/images/animations/Preloader/Preloader_02.png"
-    ], [
+    let gifPreloader = new AnimatedGif();
+    gifPreloader.loadFrames("./assets/images/animations/Preloader/Preloader", 2, "png", [
         0, 0
     ]);
     gifPreloader.setTransform(0, 0, -1, -1);
     gifPreloader.start();
 
     // Easteregg
-    let gifEasteregg = new AnimatedGif([
-        "./assets/images/animations/Easteregg/Easteregg_01.png", "./assets/images/animations/Easteregg/Easteregg_02.png",
-        "./assets/images/animations/Easteregg/Easteregg_03.png", "./assets/images/animations/Easteregg/Easteregg_04.png",
-        "./assets/images/animations/Easteregg/Easteregg_05.png", "./assets/images/animations/Easteregg/Easteregg_06.png",
-        "./assets/images/animations/Easteregg/Easteregg_07.png", "./assets/images/animations/Easteregg/Easteregg_08.png",
-        "./assets/images/animations/Easteregg/Easteregg_09.png", "./assets/images/animations/Easteregg/Easteregg_10.png",
-        "./assets/images/animations/Easteregg/Easteregg_11.png", "./assets/images/animations/Easteregg/Easteregg_12.png",
-        "./assets/images/animations/Easteregg/Easteregg_13.png", "./assets/images/animations/Easteregg/Easteregg_14.png",
-        "./assets/images/animations/Easteregg/Easteregg_15.png", "./assets/images/animations/Easteregg/Easteregg_16.png",
-        "./assets/images/animations/Easteregg/Easteregg_17.png", "./assets/images/animations/Easteregg/Easteregg_18.png",
-        "./assets/images/animations/Easteregg/Easteregg_19.png", "./assets/images/animations/Easteregg/Easteregg_20.png",
-        "./assets/images/animations/Easteregg/Easteregg_21.png", "./assets/images/animations/Easteregg/Easteregg_22.png"
-    ], [
+    let gifEasteregg = new AnimatedGif();
+    gifEasteregg.loadFrames("./assets/images/animations/Easteregg/Easteregg", 22, "png", [
         20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20
     ]);
     gifEasteregg.setTransform(216, 128, -1, -1);
 
+
     // Erisolsprite Hero
-    let gifErisolpriteHero = new AnimatedGif([
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_01.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_02.png",
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_03.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_04.png",
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_05.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_06.png",
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_07.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_08.png",
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_09.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_10.png",
-        "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_11.png", "./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero_12.png"
-    ], [
+    let gifErisolpriteHero = new AnimatedGif();
+    gifErisolpriteHero.loadFrames("./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero", 12, "png", [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     ]);
     gifErisolpriteHero.setTransform(521, 131, 442.96, 674.61);
 
     // Jasprosesprite Back
-    let gifJasprosespriteBack = new AnimatedGif([
-        "./assets/images/animations/Jasprosesprite Back/Jasprosesprite_Back_01.png",
-        "./assets/images/animations/Jasprosesprite Back/Jasprosesprite_Back_02.png"
-    ], [
+    let gifJasprosespriteBack = new AnimatedGif();
+    gifJasprosespriteBack.loadFrames( "./assets/images/animations/Jasprosesprite Back/Jasprosesprite_Back", 2, "png", [
         0, 0
     ]);
     gifJasprosespriteBack.setTransform(0, 0, -1, -1);
@@ -79,7 +59,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Fonts
     let mainText = new Text();
-    mainText.loadText("FontStuck", "./assets/fonts/FontStuck.png");
+    mainText.loadFont("FontStuck", "./assets/fonts/FontStuck.png");
 
 
     // Game specific
@@ -107,7 +87,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let GAME_interaction_screen = new Interactable(0, 0, 650, 450);
     let GAME_interaction_controlVolume = new Interactable(2, 3, 23, 22);
     let GAME_interaction_easteregg = new Interactable(225, 199, 55, 60);
-    let GAME_interaction_erisolsprite = new Interactable(442, 135, 44.775, 70.2);
     let GAME_interaction_fuckButtons = new Interactable(33, 10, 164, 426);
 
 

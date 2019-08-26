@@ -63,6 +63,17 @@ function setupCanvas() {
     ctxSprite.imageSmoothingEnabled = false;
 }
 
+// Add padding
+function addPadding(input, char, length) {
+    let output = input.toString();
+
+    while(output.length < length) {
+        output = char + output;
+    }
+
+    return output;
+}
+
 // Hexadecimal to RGB
 function hexToRgb(color) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -149,7 +160,7 @@ class Text {
     }
 
     // Text loading function
-    loadText (font, src) {
+    loadFont (font, src) {
         let thisFont = new TextFont(src);
 
         // Glyph loading
@@ -249,14 +260,18 @@ class TextFont {
 
 // Animated Gif object
 class AnimatedGif {
-    constructor(frames, timing) {
+    constructor() {
         this.frames = [];
         this.loadedFrames = [];
-        this.timing = timing;
+        this.timing = [];
         this.curTiming = 0;
         this.curFrame = 0;
         this.isPlaying = false;
         this.transform = new Vector4();
+    }
+
+    loadFramesSpecific(frames, timing) {
+        this.timing = timing;
 
         gifs[currentGif] = this;
         loadedGifs[currentGif] = false;
@@ -265,12 +280,49 @@ class AnimatedGif {
             this.frames[i] = new Image();
             this.frames[i].src = frames[i];
 
+
             this.loadedFrames[i] = false;
 
             this.frames[i].onload = (e) => {
                 this.loadedFrames[this.frames.indexOf((e.target == null) ? e.path[0] : e.target)] = true;
 
                 if(frames.length == this.loadedFrames.length) {
+                    let hasFailed = false;
+                    
+                    for(let n = 0; n < this.loadedFrames.length; n++) {
+                        if(this.loadedFrames[n] == false) {
+                            hasFailed = true;
+                            break;
+                        }
+                    }
+
+                    if(!hasFailed) {
+                        loadedGifs[gifs.indexOf(this)] = true;
+                    }
+                }
+            };
+        }
+
+        currentGif++;
+    }
+
+    loadFrames(path, amount, fileType, timing) {
+        this.timing = timing;
+
+        gifs[currentGif] = this;
+        loadedGifs[currentGif] = false;
+
+        for(let i = 0; i < amount; i++) {
+            this.frames[i] = new Image();
+            this.frames[i].src = path + "_" + addPadding(i + 1, '0', 2) + "." + fileType;
+            
+            this.loadedFrames[i] = false;
+            
+            this.frames[i].onload = (e) => {
+                this.loadedFrames[this.frames.indexOf((e.target == null) ? e.path[0] : e.target)] = true;
+                
+                
+                if(amount == this.loadedFrames.length) {
                     let hasFailed = false;
                     
                     for(let n = 0; n < this.loadedFrames.length; n++) {
