@@ -28,12 +28,10 @@ let loadedGifs = [];
 let allGifsLoaded = false;
 let currentGif = 0;
 
-/// Loading preset sprites
-// Volume control
-loadSprite("./assets/images/controls/Volume_01.png");
-loadSprite("./assets/images/controls/Volume_02.png");
-loadSprite("./assets/images/controls/Volume_03.png");
-loadSprite("./assets/images/controls/Volume_04.png");
+// Fonts
+let fonts = new Map();
+let allFontsLoaded = false;
+let loadedFonts = [];
 
 
 // Set up canvas
@@ -132,16 +130,10 @@ function loadAudio(path) {
 
 // Text class
 class Text {
-    constructor() {
-        this.fonts = new Map();
-        this.allFontsLoaded = false;
-        this.loadedFonts = [];
-    }
-
     // Get text width
-    getTextWidth (text, font, size) {
+    static getTextWidth (text, font, size) {
         let width = 0;
-        let fontShortcut = this.fonts.get(font);
+        let fontShortcut = fonts.get(font);
 
         for(let i = 0; i < text.length; i++) {
             // Line breaks
@@ -154,13 +146,11 @@ class Text {
             width += (fontShortcut.sprites.get(text[i]).z + fontShortcut.glyphSpacing) * size;
         }
 
-
-
         return width;
     }
 
     // Text loading function
-    loadFont (font, src) {
+    static loadFont (font, src, data) {
         let thisFont = new TextFont(src);
 
         // Glyph loading
@@ -179,17 +169,17 @@ class Text {
                 thisFont.spaceWidth = myObj.spaceWidth;
             }
         };
-        xmlhttp.open("GET", "./assets/fonts/FontStuck.json", true);
+        xmlhttp.open("GET", data, true);
         xmlhttp.send();
 
-        this.fonts.set(font, thisFont);
+        fonts.set(font, thisFont);
     }
 
     // Text drawing function
-    drawText (text, x, y, font, colour, size) {
+    static drawText (text, x, y, font, colour, size) {
         let offsetX = 0;
         let offsetY = 0;
-        let fontShortcut = this.fonts.get(font);
+        let fontShortcut = fonts.get(font);
 
         for(let i = 0; i < text.length; i++) {
             // Line breaks

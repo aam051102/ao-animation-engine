@@ -9,59 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setupCanvas();
     
-    /// Sprites
-    // Other
-    loadSprite("./assets/images/BG1.png");
-    loadSprite("./assets/images/BG2.png");
-    loadSprite("./assets/images/Arrow.png");
-    loadSprite("./assets/images/TextBox1.png");
-    loadSprite("./assets/images/TextBox2.png");
-    loadSprite("./assets/images/FuckButtons.png");
-    loadSprite("./assets/images/Erisolsprite.png");
-
-
-    // Audio
-    loadAudio("./assets/audio/Elevatorstuck_Meows.mp3");
-    audio[0].loop = true;
-
-
-    // Gifs
-    // Preloader
-    let gifPreloader = new AnimatedGif();
-    gifPreloader.loadFrames("./assets/images/animations/Preloader/Preloader", 2, "png", [
-        0, 0
-    ]);
-    gifPreloader.setTransform(0, 0, -1, -1);
-    gifPreloader.start();
-
-    // Easteregg
-    let gifEasteregg = new AnimatedGif();
-    gifEasteregg.loadFrames("./assets/images/animations/Easteregg/Easteregg", 22, "png", [
-        20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20
-    ]);
-    gifEasteregg.setTransform(216, 128, -1, -1);
-
-
-    // Erisolsprite Hero
-    let gifErisolpriteHero = new AnimatedGif();
-    gifErisolpriteHero.loadFrames("./assets/images/animations/Erisolsprite Hero/Erisolsprite_Hero", 12, "png", [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    ]);
-    gifErisolpriteHero.setTransform(521, 131, 442.96, 674.61);
-
-    // Jasprosesprite Back
-    let gifJasprosespriteBack = new AnimatedGif();
-    gifJasprosespriteBack.loadFrames( "./assets/images/animations/Jasprosesprite Back/Jasprosesprite_Back", 2, "png", [
-        0, 0
-    ]);
-    gifJasprosespriteBack.setTransform(0, 0, -1, -1);
-
-
-    // Fonts
-    let mainText = new Text();
-    mainText.loadFont("FontStuck", "./assets/fonts/FontStuck.png");
-
-
     // Game specific
     let GAME_curFrame = 0;
     let GAME_fade = 0;
@@ -70,8 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let GAME_messageFrame = 0;
     let GAME_fuckMessage = false;
     let GAME_jasproseMessage = 0;
-
-
     
     let GAME_erisolspriteHeroPosX = 509.1;
     let GAME_erisolspriteHeroPosY = 112;
@@ -80,8 +25,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let GAME_erisolspriteArrowDirection = false;
 
     let GAME_fuckButtonsPos = -165;
-
-    
 
     // Interactables
     let GAME_interaction_screen = new Interactable(0, 0, 650, 450);
@@ -92,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Main loop
     let loop = setInterval(() => {
-        if (allSpritesLoaded && mainText.allFontsLoaded && allGifsLoaded && allAudioLoaded) {
+        if (allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {
             // Reset canvas
             ctxBuffer.clearRect(0, 0, 650, 450);
             
@@ -101,7 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 gifPreloader.update();
 
                 // "Click to start." text
-                mainText.drawText("Click to start.", 325 - (mainText.getTextWidth("Click to start.", "FontStuck", 1) / 2), 400, "FontStuck", hexToRgb("#000000"), 1);
+                Text.drawText("Click to start.", 325 - (Text.getTextWidth("Click to start.", "FontStuck", 1) / 2), 400, "FontStuck", hexToRgb("#000000"), 1);
             } else if(GAME_curFrame === 1) {
                 gifPreloader.update();
 
@@ -157,7 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if(GAME_messageFrame > 0) {
-                        mainText.drawText("Who the fuck is this.", 80, 50 - 6, "FontStuck", hexToRgb("#000000"), 1);
+                        Text.drawText("Who the fuck is this.", 80, 50 - 6, "FontStuck", hexToRgb("#000000"), 1);
                     }
 
                     if(GAME_messageFrame < 2) {
@@ -173,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if(GAME_messageFrame > 0) {
-                        mainText.drawText("You interrogate the ghastly green sprite for answers.", 80, 50 - 6, "FontStuck", hexToRgb("#000000"), 1);
+                        Text.drawText("You interrogate the ghastly green sprite for answers.", 80, 50 - 6, "FontStuck", hexToRgb("#000000"), 1);
                     }
 
                     if(GAME_messageFrame < 2) {
@@ -247,7 +190,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if(GAME_messageFrame > 0) {
-                        mainText.drawText("fuck", 325 - mainText.getTextWidth("fuck", "FontStuck", 1) / 2, 225 + (177 / 2) - 4, "FontStuck", hexToRgb("#4ac925"), 1);
+                        Text.drawText("fuck", 325 - Text.getTextWidth("fuck", "FontStuck", 1) / 2, 225 + (177 / 2) - 4, "FontStuck", hexToRgb("#4ac925"), 1);
                     }
 
                     if(GAME_messageFrame < 2) {
@@ -326,12 +269,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
             // Fonts
-            if(!mainText.allFontsLoaded) {
-                mainText.allFontsLoaded = true;
+            if(!allFontsLoaded) {
+                allFontsLoaded = true;
 
-                for (var n = 0; n < mainText.fonts.length; n++) {
-                    if (mainText.loadedFonts[n] == false) {
-                        mainText.allFontsLoaded = false;
+                for (var n = 0; n < fonts.length; n++) {
+                    if (loadedFonts[n] == false) {
+                        allFontsLoaded = false;
                         break;
                     }
                 }
