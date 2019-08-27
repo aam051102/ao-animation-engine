@@ -1,4 +1,4 @@
-/// Sprites
+/// --- Sprites --- ///
 // Volume control
 loadSprite("./assets/images/controls/Volume_01.png");
 loadSprite("./assets/images/controls/Volume_02.png");
@@ -15,7 +15,7 @@ loadSprite("./assets/images/FuckButtons.png");
 loadSprite("./assets/images/Erisolsprite.png");
 
 
-/// Gifs
+/// --- Gifs --- ///
 // Preloader
 let gifPreloader = new AnimatedGif();
 gifPreloader.loadFrames("./assets/images/animations/Preloader/Preloader", 2, "png", [
@@ -46,12 +46,12 @@ gifJasprosespriteBack.loadFrames( "./assets/images/animations/Jasprosesprite Bac
 gifJasprosespriteBack.setTransform(0, 0, -1, -1);
 
 
-/// Audio
+/// --- Audio --- ///
 // Main background audio loop
 loadAudio("./assets/audio/Elevatorstuck_Meows.mp3");
 audio[0].loop = true;
 
 
-/// Fonts
+/// --- Fonts --- ///
 // Standard FontStuck
 Text.loadFont("FontStuck", "./assets/fonts/FontStuck.png", "./assets/fonts/FontStuck.json");
