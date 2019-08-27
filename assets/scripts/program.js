@@ -1,10 +1,9 @@
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     // Canvas setup
-    // Main canvas
     DOMcanvas = document.querySelector("#gameCanvas");
 
     setupCanvas();
-    
+
     // Game specific
     let GAME_curFrame = 0;
     let GAME_fade = 0;
@@ -27,7 +26,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let GAME_interaction_controlVolume = new Interactable(2, 3, 23, 22);
     let GAME_interaction_easteregg = new Interactable(225, 199, 55, 60);
     let GAME_interaction_fuckButtons = new Interactable(33, 10, 164, 426);
-
 
     // Main loop
     let loop = setInterval(() => {
@@ -56,10 +54,10 @@ window.addEventListener('DOMContentLoaded', () => {
                     gifJasprosespriteBack.start();
                 }
             } else if(GAME_curFrame === 2) {
-                ctxBuffer.drawImage(sprites[4], 0, 0);
+                ctxBuffer.drawImage(sprBG1, 0, 0);
 
-                ctxBuffer.drawImage(sprites[10], 442, 135 - GAME_erisolspriteArrowOffset, 44.775, 70.2);
-                if(GAME_fade == 0) ctxBuffer.drawImage(sprites[6], 450, 113 + GAME_erisolspriteArrowOffset, 20.88, 12.96);
+                ctxBuffer.drawImage(sprErisolsprite, 442, 135 - GAME_erisolspriteArrowOffset, 44.775, 70.2);
+                if(GAME_fade == 0) ctxBuffer.drawImage(sprArrow, 450, 113 + GAME_erisolspriteArrowOffset, 20.88, 12.96);
 
                 gifJasprosespriteBack.update();
                 gifEasteregg.update();
@@ -88,11 +86,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Jasprose message
                 if(GAME_jasproseMessage == 1) {
                     if(GAME_messageFrame == 2) {
-                        ctxBuffer.drawImage(sprites[7], 56.5, 25, 537, 50);
+                        ctxBuffer.drawImage(sprTextBox1, 56.5, 25, 537, 50);
                     } else if(GAME_messageFrame == 1) {
-                        ctxBuffer.drawImage(sprites[7], 49.5, 24.5, 551, 51);
+                        ctxBuffer.drawImage(sprTextBox1, 49.5, 24.5, 551, 51);
                     } else if(GAME_messageFrame == 0) {
-                        ctxBuffer.drawImage(sprites[7], 191, 37.5, 268, 25);
+                        ctxBuffer.drawImage(sprTextBox1, 191, 37.5, 268, 25);
                     }
 
                     if(GAME_messageFrame > 0) {
@@ -104,11 +102,11 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 } else if(GAME_jasproseMessage == 2) {
                     if(GAME_messageFrame == 2) {
-                        ctxBuffer.drawImage(sprites[7], 56.5, 25, 537, 50);
+                        ctxBuffer.drawImage(sprTextBox1, 56.5, 25, 537, 50);
                     } else if(GAME_messageFrame == 1) {
-                        ctxBuffer.drawImage(sprites[7], 49.5, 24.5, 551, 51);
+                        ctxBuffer.drawImage(sprTextBox1, 49.5, 24.5, 551, 51);
                     } else if(GAME_messageFrame == 0) {
-                        ctxBuffer.drawImage(sprites[7], 191, 37.5, 268, 25);
+                        ctxBuffer.drawImage(sprTextBox1, 191, 37.5, 268, 25);
                     }
 
                     if(GAME_messageFrame > 0) {
@@ -145,8 +143,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else if(GAME_curFrame === 3) {
-                ctxBuffer.drawImage(sprites[5], 0, 0)
-                ctxBuffer.drawImage(sprites[9], GAME_fuckButtonsPos, 10);
+                ctxBuffer.drawImage(sprBG2, 0, 0)
+                ctxBuffer.drawImage(sprFuckButtons, GAME_fuckButtonsPos, 10);
 
                 gifErisolpriteHero.update();
 
@@ -178,11 +176,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Fuck buttons
                 if(GAME_fuckMessage) {
                     if(GAME_messageFrame == 2) {
-                        ctxBuffer.drawImage(sprites[8], 56.5, 225, 537, 177);
+                        ctxBuffer.drawImage(sprTextBox2, 56.5, 225, 537, 177);
                     } else if(GAME_messageFrame == 1) {
-                        ctxBuffer.drawImage(sprites[8], 46.5, 221.5, 557, 184);
+                        ctxBuffer.drawImage(sprTextBox2, 46.5, 221.5, 557, 184);
                     } else if(GAME_messageFrame == 0) {
-                        ctxBuffer.drawImage(sprites[8], 156.5, 258, 338, 111);
+                        ctxBuffer.drawImage(sprTextBox2, 156.5, 258, 338, 111);
                     }
 
                     if(GAME_messageFrame > 0) {
@@ -207,7 +205,7 @@ window.addEventListener('DOMContentLoaded', () => {
             
 
             // Controls
-            ctxBuffer.drawImage(sprites[volume], 3, 2, 22.95, 21.65); // Volume
+            ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
 
             
             // Update main canvas with buffer
@@ -219,8 +217,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             // Draw volume controls
-            if(loadedSprites[volume]) {
-                ctxBuffer.drawImage(sprites[volume], 3, 2, 22.95, 21.65); // Volume
+            if(loadedSprites[getSpriteIndex(sprVolume[volume])]) {
+                ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
             }
 
 
@@ -280,7 +278,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if(volume >= 3) volume = 0;
             else volume++;
 
-            if(!audio[0].paused) {
+            if(!audioMain.paused) {
                 updateVolume();
             }
 
@@ -291,7 +289,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if(GAME_curFrame == 0) {
             if(GAME_interaction_screen.check()) {
                 GAME_curFrame += 1;
-                audio[0].play();
+                audioMain.play();
                 updateVolume();
 
                 return;

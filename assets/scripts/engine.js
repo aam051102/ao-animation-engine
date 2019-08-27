@@ -170,7 +170,7 @@ function loadSprite(path) {
 
     currentSprite++;
 
-    return currentSprite - 1;
+    return sprites[currentSprite - 1];
 };
 
 // Audio loading function
@@ -185,7 +185,7 @@ function loadAudio(path) {
 
     currentAudio++;
 
-    return currentAudio - 1;
+    return audio[currentAudio - 1];
 };
 
 // Text class
@@ -447,10 +447,15 @@ class Interactable {
     }
 }
 
-// Vector4 object
+// Vector4
 function Vector4(x, y, z, w) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.w = w;
+}
+
+// Get index of item in sprites array
+function getSpriteIndex(pointer) {
+    return sprites.indexOf(pointer);
 }

@@ -1,18 +1,19 @@
 /// --- Sprites --- ///
 // Volume control
-loadSprite("./assets/images/controls/Volume_01.png");
-loadSprite("./assets/images/controls/Volume_02.png");
-loadSprite("./assets/images/controls/Volume_03.png");
-loadSprite("./assets/images/controls/Volume_04.png");
+let sprVolume = [];
+sprVolume[0] = loadSprite("./assets/images/controls/Volume_01.png");
+sprVolume[1] = loadSprite("./assets/images/controls/Volume_02.png");
+sprVolume[2] = loadSprite("./assets/images/controls/Volume_03.png");
+sprVolume[3] = loadSprite("./assets/images/controls/Volume_04.png");
 
 // Other
-loadSprite("./assets/images/BG1.png");
-loadSprite("./assets/images/BG2.png");
-loadSprite("./assets/images/Arrow.png");
-loadSprite("./assets/images/TextBox1.png");
-loadSprite("./assets/images/TextBox2.png");
-loadSprite("./assets/images/FuckButtons.png");
-loadSprite("./assets/images/Erisolsprite.png");
+let sprBG1 = loadSprite("./assets/images/BG1.png");
+let sprBG2 = loadSprite("./assets/images/BG2.png");
+let sprArrow = loadSprite("./assets/images/Arrow.png");
+let sprTextBox1 = loadSprite("./assets/images/TextBox1.png");
+let sprTextBox2 = loadSprite("./assets/images/TextBox2.png");
+let sprFuckButtons = loadSprite("./assets/images/FuckButtons.png");
+let sprErisolsprite = loadSprite("./assets/images/Erisolsprite.png");
 
 
 /// --- Gifs --- ///
@@ -48,8 +49,8 @@ gifJasprosespriteBack.setTransform(0, 0, -1, -1);
 
 /// --- Audio --- ///
 // Main background audio loop
-loadAudio("./assets/audio/Elevatorstuck_Meows.mp3");
-audio[0].loop = true;
+let audioMain = loadAudio("./assets/audio/Elevatorstuck_Meows.mp3");
+audioMain.loop = true;
 
 
 /// --- Fonts --- ///
