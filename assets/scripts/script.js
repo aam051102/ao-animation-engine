@@ -2,10 +2,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Canvas setup
     // Main canvas
     DOMcanvas = document.querySelector("#gameCanvas");
-    ctx = DOMcanvas.getContext("2d");
-    ctx.fillStyle = "#000000";
-	ctx.font = "bold 13px Courier New";
-    ctx.textAlign = "center";
 
     setupCanvas();
     
@@ -217,68 +213,18 @@ window.addEventListener('DOMContentLoaded', () => {
             // Update main canvas with buffer
             ctx.putImageData(ctxBuffer.getImageData(0, 0, DOMcanvasBuffer.width, DOMcanvasBuffer.height), 0, 0);
 		} else {
-            // Preloader
+            // Draw preloader
             if(loadedGifs[gifs.indexOf(gifPreloader)]) {
                 gifPreloader.update();
             }
 
-            // Controls - volume
+            // Draw volume controls
             if(loadedSprites[volume]) {
                 ctxBuffer.drawImage(sprites[volume], 3, 2, 22.95, 21.65); // Volume
             }
 
 
-
-            // Sprites
-            if(!allSpritesLoaded) {
-                allSpritesLoaded = true;
-
-                for (var n = 0; n < sprites.length; n++) {
-                    if (loadedSprites[n] == false) {
-                        allSpritesLoaded = false;
-                        break;
-                    }
-                }
-            }
-
-
-            // Audio
-            if(!allAudioLoaded) {
-                allAudioLoaded = true;
-
-                for (var n = 0; n < audio.length; n++) {
-                    if (loadedAudio[n] == false) {
-                        allAudioLoaded = false;
-                        break;
-                    }
-                }
-            }
-
-
-            // Gifs
-            if(!allGifsLoaded) {
-                allGifsLoaded = true;
-
-                for (var n = 0; n < gifs.length; n++) {
-                    if (loadedGifs[n] == false) {
-                        allGifsLoaded = false;
-                        break;
-                    }
-                }
-            }
-
-
-            // Fonts
-            if(!allFontsLoaded) {
-                allFontsLoaded = true;
-
-                for (var n = 0; n < fonts.length; n++) {
-                    if (loadedFonts[n] == false) {
-                        allFontsLoaded = false;
-                        break;
-                    }
-                }
-            }
+            checkLoadAssets();
         }
     }, 41);
 

@@ -34,9 +34,69 @@ let allFontsLoaded = false;
 let loadedFonts = [];
 
 
+// Checks if various assets are loaded
+function checkLoadAssets() {
+    // Sprites
+    if(!allSpritesLoaded) {
+        allSpritesLoaded = true;
+
+        for (var n = 0; n < sprites.length; n++) {
+            if (loadedSprites[n] == false) {
+                allSpritesLoaded = false;
+                break;
+            }
+        }
+    }
+
+
+    // Audio
+    if(!allAudioLoaded) {
+        allAudioLoaded = true;
+
+        for (var n = 0; n < audio.length; n++) {
+            if (loadedAudio[n] == false) {
+                allAudioLoaded = false;
+                break;
+            }
+        }
+    }
+
+
+    // Gifs
+    if(!allGifsLoaded) {
+        allGifsLoaded = true;
+
+        for (var n = 0; n < gifs.length; n++) {
+            if (loadedGifs[n] == false) {
+                allGifsLoaded = false;
+                break;
+            }
+        }
+    }
+
+
+    // Fonts
+    if(!allFontsLoaded) {
+        allFontsLoaded = true;
+
+        for (var n = 0; n < fonts.length; n++) {
+            if (loadedFonts[n] == false) {
+                allFontsLoaded = false;
+                break;
+            }
+        }
+    }
+}
+
 // Set up canvas
 function setupCanvas() {
-    // Buffer canvas
+    // Main canvas context
+    ctx = DOMcanvas.getContext("2d");
+    ctx.fillStyle = "#000000";
+	ctx.font = "bold 13px Courier New";
+    ctx.textAlign = "center";
+
+    // Buffer canvas and context
     DOMcanvasBuffer = document.createElement("canvas");
     DOMcanvasBuffer.id = "bufferCanvas";
     DOMcanvasBuffer.width = DOMcanvas.width;
@@ -48,7 +108,7 @@ function setupCanvas() {
 	ctxBuffer.font = "bold 13px Courier New";
     ctxBuffer.textAlign = "center";
 
-    // Sprite canvas
+    // Sprite canvas and context
     DOMcanvasSprite = document.createElement("canvas");
     DOMcanvasSprite.id = "spriteCanvas";
     DOMcanvasSprite.width = DOMcanvas.width;
