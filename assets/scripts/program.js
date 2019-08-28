@@ -1,3 +1,10 @@
+/*
+Title: [S] Jasprosesprite^2: Investigate.
+Origin: Act Omega
+Programmer: MadCreativity
+*/
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Canvas setup
     DOMcanvas = document.querySelector("#gameCanvas");

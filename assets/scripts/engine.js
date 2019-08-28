@@ -459,3 +459,21 @@ function Vector4(x, y, z, w) {
 function getSpriteIndex(pointer) {
     return sprites.indexOf(pointer);
 }
+
+// Fade
+class Fade {
+    constructor(speed) {
+        this.curFade = 0.0;
+        this.speed = speed;
+    }
+
+    update(drawFunc) {
+        ctxBuffer.globalAlpha = this.curFade;
+
+        drawFunc();
+
+        ctxBuffer.globalAlpha = 1;
+
+        this.curFade += speed;
+    }
+}
