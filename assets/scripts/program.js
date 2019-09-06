@@ -55,11 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else if(GAME_curFrame === 2) {
                 ctxBuffer.drawImage(sprBG1, 0, 0);
+                gifJasprosespriteBack.update();
 
                 ctxBuffer.drawImage(sprErisolsprite, 442, 135 - GAME_erisolspriteArrowOffset, 44.775, 70.2);
                 if(GAME_fade == 0) ctxBuffer.drawImage(sprArrow, 450, 113 + GAME_erisolspriteArrowOffset, 20.88, 12.96);
 
-                gifJasprosespriteBack.update();
                 gifEasteregg.update();
 
 
