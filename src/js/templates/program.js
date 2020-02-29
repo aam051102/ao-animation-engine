@@ -1,9 +1,11 @@
+@import "./src/js/partials/engine.js"
+@import "./src/js/partials/assets.js"
+
 /*
 Title: [S] Jasprosesprite^2: Investigate.
 Origin: Act Omega
 Programmer: MadCreativity
 */
-
 
 document.addEventListener("DOMContentLoaded", () => {
     // Canvas setup
@@ -305,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Easteregg
         if(GAME_curFrame == 2 && GAME_fade == 0 && GAME_jasproseMessage == 0) {
-            if(GAME_interaction_easteregg.check()) {
+            if(GAME_interaction_easteregg.check() && !gifEasteregg.isPlaying) {
                 gifEasteregg.reset();
                 gifEasteregg.start();
 
