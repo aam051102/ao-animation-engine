@@ -1,6 +1,6 @@
 const gulp = require("gulp");
 const minify = require("gulp-minify");
-const jsImport = require("gulp-js-import");
+const jsImport = require("./mods/gulp-js-import");
 const ejs = require("gulp-ejs");
 const rename = require("gulp-rename");
 const connect = require("gulp-connect");

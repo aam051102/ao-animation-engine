@@ -1,3 +1,6 @@
+@import "./src/js/partials/engine.js"
+@import "./src/js/partials/assets.js"
+
 /*
 Title: Test Program
 Origin: Null
