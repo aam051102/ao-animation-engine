@@ -95,7 +95,7 @@ function watchScss() {
 }
 
 function watchJs() {
-    gulp.watch("./src/js/templates/**/*.js", { ignoreInitial: false }, js);
+    gulp.watch("./src/js/**/*.js", { ignoreInitial: false }, js);
 }
 
 function watchAudio() {
