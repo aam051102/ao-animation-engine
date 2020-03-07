@@ -11,20 +11,26 @@ module.exports = function (options) {
       return ''
     }
 
-    const fileReg = /@import\s["'](.*\.js)["']/gi
+    const fileReg = /@import\s["'](.*?)["']/gi
 
     if (!fs.existsSync(path)) {
       throw new Error('file ' + path + ' no exist')
     }
 
-    let content = fs.readFileSync(path, {
-        encoding: 'utf8'
-    })
+    let content;
+    
+    if(path.endsWith(".png")) {
+        content = "data:image/" + path.split('.').pop() + ";base64," + new Buffer(fs.readFileSync(path), "binary").toString("base64")
+    } else {
+        content = fs.readFileSync(path, {
+            encoding: 'utf8'
+        })
+    }
 
     importStack[path] = path
 
     content = content.replace(fileReg, (match, fileName) => {
-      let importPath = path.replace(/[^\/]*\.js$/, fileName)
+      let importPath = fileName;
 
       if (importPath in importStack) {
         return ''

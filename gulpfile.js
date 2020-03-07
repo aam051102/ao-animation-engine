@@ -30,7 +30,7 @@ function html(next) {
 }
 
 function images(next) {
-    gulp.src("./src/assets/img/*")
+    gulp.src("./src/assets/images/**/*")
         .pipe(imagemin())
         .pipe(gulp.dest("./dist/assets/images/"))
         .pipe(connect.reload());
@@ -87,7 +87,7 @@ function watchHtml() {
 }
 
 function watchImages() {
-    gulp.watch("./src/assets/img/*", { ignoreInitial: false }, images);
+    gulp.watch("./src/assets/images/**/*", { ignoreInitial: false }, images);
 }
 
 function watchScss() {
