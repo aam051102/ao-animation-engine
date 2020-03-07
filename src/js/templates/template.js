@@ -2,7 +2,7 @@
 @import "./src/js/partials/assets.js"
 
 /*
-Title: Test Program
+Title: Program Template
 Origin: Null
 Programmer: MadCreativity
 */
