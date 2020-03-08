@@ -19,8 +19,10 @@ gifPreloader.start();
 
 /// --- Audio --- ///
 // Main background audio loop
-//let audioMain = loadAudio("./assets/audio/main.mp3");
-//audioMain.loop = true;
+let audioMain = loadAudio("./assets/audio/TheFurthestRing.mp3");
+audioMain.loop = true;
 
+// Ending drama
+let audioDramaEnding = loadAudio("./assets/audio/DramaWakeUp.mp3");
 
 /// --- Fonts --- ///
