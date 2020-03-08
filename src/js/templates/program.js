@@ -2,8 +2,8 @@
 @import "./src/js/partials/assets.js"
 
 /*
-Title: Program Template
-Origin: Null
+Title: [S] Vriska: W8ke Up
+Origin: Act Omega
 Programmer: MadCreativity
 */
 
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let loop = setInterval(() => {
         if(allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {
             // Reset canvas
-            ctxBuffer.clearRect(0, 0, 650, 450);
+            ctxBuffer.clearRect(0, 0, 950, 650);
 
             
             // Draw
