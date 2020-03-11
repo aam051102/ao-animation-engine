@@ -32,4 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
             checkLoadAssets();
         }
     }, 41);
+
+
+    let tl = new Timeline([
+        new Key(
+            new TweenValue(1, 10),
+            1,
+            50,
+            BezierEasing(1, 0, 0, 1)
+        )
+    ]);
+    tl.play();
 });

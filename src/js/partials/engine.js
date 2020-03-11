@@ -477,3 +477,78 @@ class Fade {
         this.curFade += speed;
     }
 }
+
+
+
+@import "./node_modules/bezier-easing/dist/bezier-easing.js"
+
+// Frames Per Second of animation
+const FPS = 24;
+
+// Timeline
+class Timeline {
+    constructor(keys) {
+        this.updateLoop = 0;
+        this.keys = keys || [];
+        this.curFrame = 0;
+    }
+
+    addKey(key) {
+        this.keys.push(key);
+    }
+
+    play() {
+        this.updateLoop = setInterval(this.update.bind(this), 1000 / FPS);
+    }
+
+    stop() {
+        clearInterval(this.updateLoop);
+        this.updateLoop = 0;
+    }
+
+    update() {
+        for(let i = 0; i < this.keys.length; i++) {
+            if(this.keys[i].frameStart == this.curFrame) {
+                this.keys[i].play();
+            }
+
+            if(this.keys[i].isPlaying) {
+                this.keys[i].update(this.curFrame);
+            }
+        }
+
+        this.curFrame++;
+    }
+}
+
+// Keyframe/tween class
+class Key {
+    constructor(value, frameStart, frameEnd, easing) {
+        this.isPlaying = false;
+        this.frameStart = frameStart || 1;
+        this.frameEnd = frameEnd || 10;
+        this.easing = easing || BezierEasing(0, 0, 1, 1);
+        this.value = value;
+    }
+
+    play() {
+        this.isPlaying = true;
+    }
+
+    update(curFrame) {
+        if(curFrame == this.frameEnd) {
+            this.isPlaying = false;
+        }
+
+
+        this.value.value = (this.value.max - this.value.min) *  (this.easing((1 / this.frameEnd) * curFrame));
+        console.log(this.value.value);
+    }
+}
+
+// Value to be tweened
+function TweenValue(curValue, newValue) {
+    this.min = curValue | 0;
+    this.max = newValue | 1;
+    this.value = this.min;
+}

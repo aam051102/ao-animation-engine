@@ -6,7 +6,6 @@ const rename = require("gulp-rename");
 const connect = require("gulp-connect");
 const sass = require("gulp-sass");
 const babel = require("gulp-babel");
-const imagemin = require("gulp-imagemin");
 
 
 sass.compiler = require("node-sass");
@@ -31,7 +30,6 @@ function html(next) {
 
 function images(next) {
     gulp.src("./src/assets/images/**/*")
-        .pipe(imagemin())
         .pipe(gulp.dest("./dist/assets/images/"))
         .pipe(connect.reload());
 
