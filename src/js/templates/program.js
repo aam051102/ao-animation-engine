@@ -15,6 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCanvas();
    
 
+
+    // Variables
+    
+
+    // Interactables
+
+
+    // Timeline
+    let tl = new Timeline([
+        
+    ]);
+
+
     // Main loop
     let loop = setInterval(() => {
         if(allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {
@@ -29,18 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Update main canvas with buffer
             ctx.putImageData(ctxBuffer.getImageData(0, 0, DOMcanvasBuffer.width, DOMcanvasBuffer.height), 0, 0);
         } else {
-            checkLoadAssets();
+            if(checkLoadAssets()) {
+                tl.play();
+            }
         }
     }, 41);
-
-
-    let tl = new Timeline([
-        new Key(
-            new TweenValue(1, 10),
-            1,
-            50,
-            BezierEasing(1, 0, 0, 1)
-        )
-    ]);
-    tl.play();
 });

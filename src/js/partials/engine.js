@@ -1,3 +1,15 @@
+@import "./node_modules/bezier-easing/dist/bezier-easing.js"
+
+// Frames Per Second of animation
+const FPS = 24;
+
+// Bezier curve standards
+const BEZIER_LINEAR = BezierEasing(0.0, 0.0, 1.0, 1.0);
+const BEZIER_EASE = BezierEasing(0.25, 0.1, 0.25, 1.0);
+const BEZIER_EASE_IN = BezierEasing(0.42, 0.0, 1.0, 1.0);
+const BEZIER_EASE_IN_OUT = BezierEasing(0.42, 0.0, 0.58, 1.0);
+const BEZIER_EASE_OUT = BezierEasing(0.0, 0.0, 0.58, 1.0);
+
 /// Variables
 // Canvas
 let DOMcanvas, DOMcanvasBuffer, DOMcanvasSprite;
@@ -86,6 +98,8 @@ function checkLoadAssets() {
             }
         }
     }
+
+    return allAudioLoaded && allFontsLoaded && allGifsLoaded && allSpritesLoaded;
 }
 
 // Set up canvas
@@ -479,12 +493,6 @@ class Fade {
 }
 
 
-
-@import "./node_modules/bezier-easing/dist/bezier-easing.js"
-
-// Frames Per Second of animation
-const FPS = 24;
-
 // Timeline
 class Timeline {
     constructor(keys) {
@@ -504,6 +512,10 @@ class Timeline {
     stop() {
         clearInterval(this.updateLoop);
         this.updateLoop = 0;
+    }
+
+    getValue(key) {
+        return this.keys[key].value.value;
     }
 
     update() {
@@ -542,7 +554,6 @@ class Key {
 
 
         this.value.value = (this.value.max - this.value.min) *  (this.easing((1 / this.frameEnd) * curFrame));
-        console.log(this.value.value);
     }
 }
 
