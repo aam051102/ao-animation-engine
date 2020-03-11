@@ -197,7 +197,7 @@ class Text {
 
         for(let i = 0; i < text.length; i++) {
             // Line breaks
-                if(text[i] == " ") {
+            if(text[i] == " ") {
                 width += fontShortcut.spaceWidth * size;
 
                 continue;

@@ -72,7 +72,7 @@ function audio(next) {
 }
 
 function fonts(next) {
-    gulp.src("./src/assets/fonts/*")
+    gulp.src("./src/assets/fonts/**/*")
         .pipe(gulp.dest("./dist/assets/fonts"))
         .pipe(connect.reload());
 
