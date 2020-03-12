@@ -11,6 +11,8 @@ Programmer: MadCreativity
 document.addEventListener("DOMContentLoaded", () => {
     // Canvas setup
     DOMcanvas = document.querySelector("#gameCanvas");
+    DOMcanvas.width = "650";
+    DOMcanvas.height = "450";
 
     setupCanvas();
    
