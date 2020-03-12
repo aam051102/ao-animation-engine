@@ -64,6 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
                 }
 
+                // Loading text
+                if(loadedFonts[fonts.get("FontStuck").loadedIndex]) {
+                    const percentageText = loadingPercentage + "%";
+                    Text.drawText(percentageText, CANVAS_WIDTH / 2 - (Text.getTextWidth(percentageText, "FontStuck", 1) / 2), CANVAS_HEIGHT - 50, "FontStuck", hexToRgb("#000000"), 1);
+                }
+
                 if(checkLoadAssets()) {
                     tl.play();
                 }

@@ -49,6 +49,9 @@ let allFontsLoaded = false;
 let loadedFonts = [];
 
 
+let loadingPercentage = 0;
+
+
 // Checks if various assets are loaded
 function checkLoadAssets() {
     // Sprites
@@ -101,6 +104,22 @@ function checkLoadAssets() {
             }
         }
     }
+
+    // Calculate percentage of loading complete
+    loadingPercentage = (
+        (100 / (
+            loadedSprites.length +
+            loadedGifs.length +
+            loadedAudio.length +
+            loadedFonts.length
+            )
+        ) * (
+            loadedSprites.map((e) => e == true).length +
+            loadedGifs.map((e) => e == true).length +
+            loadedAudio.map((e) => e == true).length +
+            loadedFonts.map((e) => e == true).length
+        )
+    );
 
     return allAudioLoaded && allFontsLoaded && allGifsLoaded && allSpritesLoaded;
 }
@@ -234,6 +253,8 @@ class Text {
     // Text loading function
     static loadFont (font, src, data) {
         let thisFont = new TextFont(src);
+        thisFont.loadedIndex = loadedFonts.length;
+        loadedFonts.push(false);
 
         // Glyph loading
         let xmlhttp = new XMLHttpRequest();
@@ -249,6 +270,8 @@ class Text {
                 thisFont.breakHeight = myObj.breakHeight;
                 thisFont.lineHeight = myObj.lineHeight;
                 thisFont.spaceWidth = myObj.spaceWidth;
+
+                loadedFonts[thisFont.loadedIndex] = true;
             }
         };
         xmlhttp.open("GET", data, true);
@@ -322,6 +345,7 @@ class TextFont {
         this.breakHeight = 0;
         this.lineHeight = 0;
         this.spaceWidth = 0;
+        this.loadedIndex = 0;
     };
 
     // Add sprite
