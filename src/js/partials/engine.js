@@ -1,7 +1,10 @@
 @import "./node_modules/bezier-easing/dist/bezier-easing.js"
+@import "./mods/HighResolutionTimer.js"
 
 // Frames Per Second of animation
-const FPS = 24;
+let FPS = 24;
+let CANVAS_WIDTH = 650;
+let CANVAS_HEIGHT = 450;
 
 // Bezier curve standards
 const BEZIER_LINEAR = BezierEasing(0.0, 0.0, 1.0, 1.0);
@@ -113,8 +116,8 @@ function setupCanvas() {
     // Buffer canvas and context
     DOMcanvasBuffer = document.createElement("canvas");
     DOMcanvasBuffer.id = "bufferCanvas";
-    DOMcanvasBuffer.width = DOMcanvas.width;
-    DOMcanvasBuffer.height = DOMcanvas.height;
+    DOMcanvasBuffer.width = CANVAS_WIDTH;
+    DOMcanvasBuffer.height = CANVAS_HEIGHT;
     document.body.appendChild(DOMcanvasBuffer);
 
     ctxBuffer = DOMcanvasBuffer.getContext("2d");
@@ -122,11 +125,16 @@ function setupCanvas() {
 	ctxBuffer.font = "bold 13px Courier New";
     ctxBuffer.textAlign = "center";
 
+    ctxBuffer.webkitImageSmoothingEnabled = false;
+	ctxBuffer.msImageSmoothingEnabled = false;
+    ctxBuffer.imageSmoothingEnabled = false;
+
+
     // Sprite canvas and context
     DOMcanvasSprite = document.createElement("canvas");
     DOMcanvasSprite.id = "spriteCanvas";
-    DOMcanvasSprite.width = DOMcanvas.width;
-    DOMcanvasSprite.height = DOMcanvas.height;
+    DOMcanvasSprite.width = CANVAS_WIDTH;
+    DOMcanvasSprite.height = CANVAS_HEIGHT;
     document.body.appendChild(DOMcanvasSprite);
 
     ctxSprite = DOMcanvasSprite.getContext("2d");
@@ -496,7 +504,10 @@ class Fade {
 // Timeline
 class Timeline {
     constructor(keys) {
-        this.updateLoop = 0;
+        this.updateLoop = new HighResolutionTimer({
+            duration: Math.floor(1000 / FPS),
+            callback: this.update.bind(this)
+        });
         this.keys = keys || [];
         this.curFrame = 0;
     }
@@ -506,11 +517,11 @@ class Timeline {
     }
 
     play() {
-        this.updateLoop = setInterval(this.update.bind(this), 1000 / FPS);
+        this.updateLoop.run();
     }
 
     stop() {
-        clearInterval(this.updateLoop);
+        this.updateLoop.stop();
         this.updateLoop = 0;
     }
 
@@ -553,13 +564,13 @@ class Key {
         }
 
 
-        this.value.value = (this.value.max - this.value.min) *  (this.easing((1 / this.frameEnd) * curFrame));
+        this.value.value = ((this.value.max - this.value.min) * this.easing((1 / this.frameEnd) * curFrame)) + this.value.min;
     }
 }
 
 // Value to be tweened
 function TweenValue(curValue, newValue) {
-    this.min = curValue | 0;
-    this.max = newValue | 1;
-    this.value = this.min;
+    this.min = curValue || 0;
+    this.max = newValue || 1;
+    this.value = 0;
 }

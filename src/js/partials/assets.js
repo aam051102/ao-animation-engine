@@ -24,3 +24,5 @@ gifPreloader.start();
 
 
 /// --- Fonts --- ///
+// Standard FontStuck
+Text.loadFont("FontStuck", "./assets/fonts/FontStuck.png", "./assets/fonts/FontStuck.json");
