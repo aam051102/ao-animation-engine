@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Variables
-    
+    let GAME_curSection = 0;
 
     // Interactables
 
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let loop = setInterval(() => {
         if(allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {
             // Reset canvas
-            ctxBuffer.clearRect(0, 0, 650, 450);
+            ctxBuffer.clearRect(0, 0, DOMcanvasBuffer.width, DOMcanvasBuffer.height);
 
             
             // Draw
@@ -46,5 +46,5 @@ document.addEventListener("DOMContentLoaded", () => {
                 tl.play();
             }
         }
-    }, 41);
+    }, 1000 / FPS);
 });
