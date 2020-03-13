@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Canvas setup
     DOMcanvas = document.querySelector("#gameCanvas");
-    DOMcanvas.width = CANVAS_WIDTH;
-    DOMcanvas.height = CANVAS_HEIGHT;
+    DOMvolumeButton = document.querySelector("#volumeButton");
+    
 
     setupCanvas();
 
@@ -26,11 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Interactables
     let GAME_interaction_screen = new Interactable(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    let GAME_interaction_controlVolume = new Interactable(2, 3, 23, 22);
-
+    
     // Timeline
     let tl = new Timeline([
-        
+        new Key(
+            new TweenValue(0, 150),
+            10, 150,
+            BEZIER_EASE_IN_OUT
+        )
     ]);
 
 
@@ -48,20 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     Text.drawText("Click to start.", CANVAS_WIDTH / 2 - (Text.getTextWidth("Click to start.", "FontStuck", 1) / 2), CANVAS_HEIGHT - 50, "FontStuck", hexToRgb("#000000"), 1);
                 }
-
                 /* PROGRAM END */
-
-                // Draw controls
-                ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
             } else {
                 // Draw preloader
                 if(loadedGifs[gifs.indexOf(gifPreloader)]) {
                     gifPreloader.update();
-                }
-
-                // Draw volume controls
-                if(loadedSprites[getSpriteIndex(sprVolume[volume])]) {
-                    ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
                 }
 
                 // Loading text
@@ -70,9 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     Text.drawText(percentageText, CANVAS_WIDTH / 2 - (Text.getTextWidth(percentageText, "FontStuck", 1) / 2), CANVAS_HEIGHT - 50, "FontStuck", hexToRgb("#000000"), 1);
                 }
 
-                if(checkLoadAssets()) {
-                    tl.play();
-                }
+                checkLoadAssets();
             }
 
             ctx.putImageData(ctxBuffer.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT), 0, 0);
@@ -91,13 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Game specific
         DOMcanvas.style.cursor = "default";
-
-        // Control - volume
-        if(GAME_interaction_controlVolume.check()) {
-            DOMcanvas.style.cursor = "pointer";
-
-            return;
-        }
     });
 
     // Mouse click
@@ -109,24 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
         mousey = e.clientY - box.top;
 
         // Game specific
-        // Control - volume
-        if(GAME_interaction_controlVolume.check()) {
-            if(volume >= 3) volume = 0;
-            else volume++;
-
-            if(!audioMain.paused) {
-                updateVolume();
-            }
-
-            return;
-        }
-
         // Preloader screen
         if(GAME_curSection == 0) {
             if(GAME_interaction_screen.check()) {
                 GAME_curSection++;
                 //audioMain.play();
                 updateVolume();
+                tl.play();
 
                 return;
             }

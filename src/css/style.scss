@@ -9,3 +9,28 @@ body {
 #bufferCanvas, #spriteCanvas {
     display: none;
 }
+
+#canvasContainer {
+    position: relative;
+}
+
+#volumeButton {
+    position: absolute;
+    width: 21px;
+    height: 20px;
+    top: 2px;
+    left: 3px;
+    border: 0;
+    padding: 0;
+    background-size: 84px 20px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    z-index: 5;
+    outline: none;
+    background-image: url('/assets/images/controls/Volume.png');
+    background-position-x: -63px;
+}
+
+#volumeButton:hover {
+    cursor: pointer;
+}

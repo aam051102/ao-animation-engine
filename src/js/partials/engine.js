@@ -19,6 +19,7 @@ let DOMcanvas, DOMcanvasBuffer, DOMcanvasSprite;
 let ctx, ctxBuffer, ctxSprite;
 
 // Volume
+let DOMvolumeButton;
 let volume = 3;
 
 // Mouse
@@ -126,6 +127,10 @@ function checkLoadAssets() {
 
 // Set up canvas
 function setupCanvas() {
+    // Main canvas
+    DOMcanvas.width = CANVAS_WIDTH;
+    DOMcanvas.height = CANVAS_HEIGHT;
+
     // Main canvas context
     ctx = DOMcanvas.getContext("2d");
     ctx.fillStyle = "#000000";
@@ -144,9 +149,9 @@ function setupCanvas() {
 	ctxBuffer.font = "bold 13px Courier New";
     ctxBuffer.textAlign = "center";
 
-    ctxBuffer.webkitImageSmoothingEnabled = false;
+    /*ctxBuffer.webkitImageSmoothingEnabled = false;
 	ctxBuffer.msImageSmoothingEnabled = false;
-    ctxBuffer.imageSmoothingEnabled = false;
+    ctxBuffer.imageSmoothingEnabled = false;*/
 
 
     // Sprite canvas and context
@@ -157,9 +162,21 @@ function setupCanvas() {
     document.body.appendChild(DOMcanvasSprite);
 
     ctxSprite = DOMcanvasSprite.getContext("2d");
-    ctxSprite.webkitImageSmoothingEnabled = false;
+    /*ctxSprite.webkitImageSmoothingEnabled = false;
 	ctxSprite.msImageSmoothingEnabled = false;
-    ctxSprite.imageSmoothingEnabled = false;
+    ctxSprite.imageSmoothingEnabled = false;*/
+
+    // Volume button
+    DOMvolumeButton.addEventListener("click", function() {
+        if(volume >= 3) volume = 0;
+        else volume++;
+
+        DOMvolumeButton.style.backgroundPosition = -(21 * volume) + "px 0";
+
+        if(!audioMain.paused) {
+            updateVolume();
+        }
+    });
 }
 
 // Add padding
@@ -588,7 +605,7 @@ class Key {
         }
 
 
-        this.value.value = ((this.value.max - this.value.min) * this.easing((1 / this.frameEnd) * curFrame)) + this.value.min;
+        this.value.value = ((this.value.max - this.value.min) * this.easing((1 / (this.frameEnd - this.frameStart)) * (curFrame - this.frameStart))) + this.value.min;
     }
 }
 

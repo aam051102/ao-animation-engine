@@ -10,15 +10,6 @@ gifPreloader.start();
 // Standard FontStuck
 Text.loadFont("FontStuck", "./assets/fonts/FontStuck.png", "./assets/fonts/FontStuck.json");
 
-// Volume control
-let sprVolume = [];
-sprVolume[0] = loadSprite("./assets/images/controls/Volume_01.png");
-sprVolume[1] = loadSprite("./assets/images/controls/Volume_02.png");
-sprVolume[2] = loadSprite("./assets/images/controls/Volume_03.png");
-sprVolume[3] = loadSprite("./assets/images/controls/Volume_04.png");
-
-
-
 /// --- Sprites --- ///
 
 
