@@ -6,12 +6,17 @@ body {
     user-select: none;          /* Likely future */
 }
 
+#gameCanvas {
+    vertical-align: bottom;
+}
+
 #bufferCanvas, #spriteCanvas {
     display: none;
 }
 
 #canvasContainer {
     position: relative;
+    display: inline-block;
 }
 
 #volumeButton {
