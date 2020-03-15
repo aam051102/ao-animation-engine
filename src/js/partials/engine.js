@@ -1,9 +1,25 @@
+@import "./node_modules/bezier-easing/dist/bezier-easing.js"
+@import "./mods/HighResolutionTimer.js"
+
+// Frames Per Second of animation
+let FPS = 24;
+let CANVAS_WIDTH = 650;
+let CANVAS_HEIGHT = 450;
+
+// Bezier curve standards
+const BEZIER_LINEAR = BezierEasing(0.0, 0.0, 1.0, 1.0);
+const BEZIER_EASE = BezierEasing(0.25, 0.1, 0.25, 1.0);
+const BEZIER_EASE_IN = BezierEasing(0.42, 0.0, 1.0, 1.0);
+const BEZIER_EASE_IN_OUT = BezierEasing(0.42, 0.0, 0.58, 1.0);
+const BEZIER_EASE_OUT = BezierEasing(0.0, 0.0, 0.58, 1.0);
+
 /// Variables
 // Canvas
 let DOMcanvas, DOMcanvasBuffer, DOMcanvasSprite;
 let ctx, ctxBuffer, ctxSprite;
 
 // Volume
+let DOMvolumeButton;
 let volume = 3;
 
 // Mouse
@@ -32,6 +48,9 @@ let currentGif = 0;
 let fonts = new Map();
 let allFontsLoaded = false;
 let loadedFonts = [];
+
+
+let loadingPercentage = 0;
 
 
 // Checks if various assets are loaded
@@ -86,10 +105,32 @@ function checkLoadAssets() {
             }
         }
     }
+
+    // Calculate percentage of loading complete
+    loadingPercentage = (
+        (100 / (
+            loadedSprites.length +
+            loadedGifs.length +
+            loadedAudio.length +
+            loadedFonts.length
+            )
+        ) * (
+            loadedSprites.map((e) => e == true).length +
+            loadedGifs.map((e) => e == true).length +
+            loadedAudio.map((e) => e == true).length +
+            loadedFonts.map((e) => e == true).length
+        )
+    );
+
+    return allAudioLoaded && allFontsLoaded && allGifsLoaded && allSpritesLoaded;
 }
 
 // Set up canvas
 function setupCanvas() {
+    // Main canvas
+    DOMcanvas.width = CANVAS_WIDTH;
+    DOMcanvas.height = CANVAS_HEIGHT;
+
     // Main canvas context
     ctx = DOMcanvas.getContext("2d");
     ctx.fillStyle = "#000000";
@@ -99,8 +140,8 @@ function setupCanvas() {
     // Buffer canvas and context
     DOMcanvasBuffer = document.createElement("canvas");
     DOMcanvasBuffer.id = "bufferCanvas";
-    DOMcanvasBuffer.width = DOMcanvas.width;
-    DOMcanvasBuffer.height = DOMcanvas.height;
+    DOMcanvasBuffer.width = CANVAS_WIDTH;
+    DOMcanvasBuffer.height = CANVAS_HEIGHT;
     document.body.appendChild(DOMcanvasBuffer);
 
     ctxBuffer = DOMcanvasBuffer.getContext("2d");
@@ -108,17 +149,34 @@ function setupCanvas() {
 	ctxBuffer.font = "bold 13px Courier New";
     ctxBuffer.textAlign = "center";
 
+    /*ctxBuffer.webkitImageSmoothingEnabled = false;
+	ctxBuffer.msImageSmoothingEnabled = false;
+    ctxBuffer.imageSmoothingEnabled = false;*/
+
+
     // Sprite canvas and context
     DOMcanvasSprite = document.createElement("canvas");
     DOMcanvasSprite.id = "spriteCanvas";
-    DOMcanvasSprite.width = DOMcanvas.width;
-    DOMcanvasSprite.height = DOMcanvas.height;
+    DOMcanvasSprite.width = CANVAS_WIDTH;
+    DOMcanvasSprite.height = CANVAS_HEIGHT;
     document.body.appendChild(DOMcanvasSprite);
 
     ctxSprite = DOMcanvasSprite.getContext("2d");
-    ctxSprite.webkitImageSmoothingEnabled = false;
+    /*ctxSprite.webkitImageSmoothingEnabled = false;
 	ctxSprite.msImageSmoothingEnabled = false;
-    ctxSprite.imageSmoothingEnabled = false;
+    ctxSprite.imageSmoothingEnabled = false;*/
+
+    // Volume button
+    DOMvolumeButton.addEventListener("click", function() {
+        if(volume >= 3) volume = 0;
+        else volume++;
+
+        DOMvolumeButton.style.backgroundPosition = -(21 * volume) + "px 0";
+
+        if(!audioMain.paused) {
+            updateVolume();
+        }
+    });
 }
 
 // Add padding
@@ -212,6 +270,8 @@ class Text {
     // Text loading function
     static loadFont (font, src, data) {
         let thisFont = new TextFont(src);
+        thisFont.loadedIndex = loadedFonts.length;
+        loadedFonts.push(false);
 
         // Glyph loading
         let xmlhttp = new XMLHttpRequest();
@@ -227,6 +287,8 @@ class Text {
                 thisFont.breakHeight = myObj.breakHeight;
                 thisFont.lineHeight = myObj.lineHeight;
                 thisFont.spaceWidth = myObj.spaceWidth;
+
+                loadedFonts[thisFont.loadedIndex] = true;
             }
         };
         xmlhttp.open("GET", data, true);
@@ -300,6 +362,7 @@ class TextFont {
         this.breakHeight = 0;
         this.lineHeight = 0;
         this.spaceWidth = 0;
+        this.loadedIndex = 0;
     };
 
     // Add sprite
@@ -476,4 +539,79 @@ class Fade {
 
         this.curFade += speed;
     }
+}
+
+
+// Timeline
+class Timeline {
+    constructor(keys) {
+        this.updateLoop = new HighResolutionTimer({
+            duration: Math.floor(1000 / FPS),
+            callback: this.update.bind(this)
+        });
+        this.keys = keys || [];
+        this.curFrame = 0;
+    }
+
+    addKey(key) {
+        this.keys.push(key);
+    }
+
+    play() {
+        this.updateLoop.run();
+    }
+
+    stop() {
+        this.updateLoop.stop();
+        this.updateLoop = 0;
+    }
+
+    getValue(key) {
+        return this.keys[key].value.value;
+    }
+
+    update() {
+        for(let i = 0; i < this.keys.length; i++) {
+            if(this.keys[i].frameStart == this.curFrame) {
+                this.keys[i].play();
+            }
+
+            if(this.keys[i].isPlaying) {
+                this.keys[i].update(this.curFrame);
+            }
+        }
+
+        this.curFrame++;
+    }
+}
+
+// Keyframe/tween class
+class Key {
+    constructor(value, frameStart, frameEnd, easing) {
+        this.isPlaying = false;
+        this.frameStart = frameStart || 1;
+        this.frameEnd = frameEnd || 10;
+        this.easing = easing || BezierEasing(0, 0, 1, 1);
+        this.value = value;
+    }
+
+    play() {
+        this.isPlaying = true;
+    }
+
+    update(curFrame) {
+        if(curFrame == this.frameEnd) {
+            this.isPlaying = false;
+        }
+
+
+        this.value.value = ((this.value.max - this.value.min) * this.easing((1 / (this.frameEnd - this.frameStart)) * (curFrame - this.frameStart))) + this.value.min;
+    }
+}
+
+// Value to be tweened
+function TweenValue(curValue, newValue) {
+    this.min = curValue || 0;
+    this.max = newValue || 1;
+    this.value = 0;
 }

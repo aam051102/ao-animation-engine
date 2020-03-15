@@ -9,137 +9,68 @@ Programmer: MadCreativity
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Program settings
+    CANVAS_WIDTH = 650;
+    CANVAS_HEIGHT = 450;
+    FPS = 24;
+
     // Canvas setup
     DOMcanvas = document.querySelector("#gameCanvas");
+    DOMvolumeButton = document.querySelector("#volumeButton");
+    
 
     setupCanvas();
 
-    const FPS = 24;
-   
-    // Game specific
-    let GAME_curFrame = 0;
-    let GAME_fade = 0;
-    let GAME_fade2 = 0;
-    let GAME_timer = [];
+    // Variables
+    let GAME_curSection = 0;
 
     // Interactables
-    let GAME_interaction_screen = new Interactable(0, 0, 950, 650);
-    let GAME_interaction_controlVolume = new Interactable(152, 103, 23, 22);
+    let GAME_interaction_screen = new Interactable(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    // Timeline
+    let tl = new Timeline([
+        new Key(
+            new TweenValue(0, 150),
+            10, 150,
+            BEZIER_EASE_IN_OUT
+        )
+    ]);
 
 
     // Main loop
-    let loop = setInterval(() => {
-        if(allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {
-            // Reset canvas
-            ctxBuffer.clearRect(0, 0, 950, 650);
+    let loop = new HighResolutionTimer({
+        duration: Math.floor(1000 / FPS),
+        callback: function() {
+            ctxBuffer.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-            
-            // Draw
-            if(GAME_curFrame === 0) {
-                gifPreloader.update();
+            if(allSpritesLoaded && allFontsLoaded && allGifsLoaded && allAudioLoaded) {        
+                /* PROGRAM START */
+                // Preloader section
+                if(GAME_curSection === 0) {
+                    gifPreloader.update();
 
-                // "Click to start." text
-                Text.drawText("Click to start.", 475 - (Text.getTextWidth("Click to start.", "FontStuck", 1) / 2), 500, "FontStuck", hexToRgb("#000000"), 1);
-            } else if(GAME_curFrame === 1) {
-                // Slight pause before animation
-                GAME_timer[0]--;
-
-                if(GAME_timer[0] <= 0) {
-                    GAME_curFrame++;
-                    
-                    GAME_timer[0] = 3;
+                    Text.drawText("Click to start.", CANVAS_WIDTH / 2 - (Text.getTextWidth("Click to start.", "FontStuck", 1) / 2), CANVAS_HEIGHT - 50, "FontStuck", hexToRgb("#000000"), 1);
                 }
-            } else if(GAME_curFrame === 2) {
-                // Black box fade
-                ctxBuffer.globalAlpha = GAME_fade;
-                ctxBuffer.fillRect(150, 100, 650, 450);
-                ctxBuffer.globalAlpha = 1;
-                GAME_fade += 1 / 16;
-
-                // Border
-                if(GAME_timer[0] <= 0) {
-                    ctxBuffer.globalAlpha = GAME_fade2;
-                    ctxBuffer.drawImage(sprBorder, 0, 0);
-                    ctxBuffer.globalAlpha = 1;
-                    GAME_fade2 += 1 / 13;
-                } else {
-                    GAME_timer[0]--;
+                /* PROGRAM END */
+            } else {
+                // Draw preloader
+                if(loadedGifs[gifs.indexOf(gifPreloader)]) {
+                    gifPreloader.update();
                 }
 
-                if(GAME_fade >= 1 && GAME_fade2 >= 1) {
-                    GAME_fade = 0;
-                    GAME_fade2 = 0;
-                    GAME_curFrame++;
+                // Loading text
+                if(loadedFonts[fonts.get("FontStuck").loadedIndex]) {
+                    const percentageText = loadingPercentage + "%";
+                    Text.drawText(percentageText, CANVAS_WIDTH / 2 - (Text.getTextWidth(percentageText, "FontStuck", 1) / 2), CANVAS_HEIGHT - 50, "FontStuck", hexToRgb("#000000"), 1);
                 }
-            } else if(GAME_curFrame === 3) {
-                ctxBuffer.fillRect(150, 100, 650, 450);
-                ctxBuffer.drawImage(sprBorder, 0, 0);
 
-
-                ctxBuffer.globalAlpha = GAME_fade;
-                ctxBuffer.fillRect(0, 0, 950, 650);
-                ctxBuffer.globalAlpha = 1;
-                GAME_fade += 0.36 / 3;
-
-                if(GAME_fade >= 0.36) {
-                    GAME_curFrame++;
-                }
-            } else if(GAME_curFrame === 4) {
-                ctxBuffer.fillRect(150, 100, 650, 450);
-                ctxBuffer.drawImage(sprBorder, 0, 0);
-
-
-                ctxBuffer.globalAlpha = GAME_fade;
-                ctxBuffer.fillRect(0, 0, 950, 650);
-                ctxBuffer.globalAlpha = 1;
-                GAME_fade -= 0.36 / 13;
-
-                if(GAME_fade <= 0) {
-                    GAME_fade = 0;
-                    GAME_curFrame++;
-                }
-            } else if(GAME_curFrame === 5) {
-                ctxBuffer.fillRect(150, 100, 650, 450);
-
-                ctxBuffer.globalAlpha = 1 - GAME_fade;
-                ctxBuffer.drawImage(sprBorder, 0, 0);
-                ctxBuffer.globalAlpha = 1;
-                GAME_fade += 0.14 / 9;
-
-                if(GAME_fade >= 0.14) {
-                    GAME_curFrame++;
-                }
-            } else if(GAME_curFrame === 6) {
-                ctxBuffer.fillRect(150, 100, 650, 450);
-
-                ctxBuffer.globalAlpha = 0.86;
-                ctxBuffer.drawImage(sprBorder, 0, 0);
-                ctxBuffer.globalAlpha = 1;
+                checkLoadAssets();
             }
 
-
-            // Draw volume controls
-            if(loadedSprites[getSpriteIndex(sprVolume[volume])]) {
-                ctxBuffer.drawImage(sprVolume[volume], 153, 102, 22.95, 21.65); // Volume
-            }
-
-            // Update main canvas with buffer
-            ctx.putImageData(ctxBuffer.getImageData(0, 0, DOMcanvasBuffer.width, DOMcanvasBuffer.height), 0, 0);
-        } else {
-            // Draw preloader
-            if(loadedGifs[gifs.indexOf(gifPreloader)]) {
-                gifPreloader.update();
-            }
-
-            // Draw volume controls
-            if(loadedSprites[getSpriteIndex(sprVolume[volume])]) {
-                ctxBuffer.drawImage(sprVolume[volume], 153, 102, 22.95, 21.65); // Volume
-            }
-
-
-            checkLoadAssets();
+            ctx.putImageData(ctxBuffer.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT), 0, 0);
         }
-    }, 1000 / FPS);
+    });
+    loop.run();
 
     // Mouse move
     DOMcanvas.addEventListener("mousemove", (e) => {
@@ -152,13 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Game specific
         DOMcanvas.style.cursor = "default";
-
-        // Control - volume
-        if(GAME_interaction_controlVolume.check()) {
-            DOMcanvas.style.cursor = "pointer";
-
-            return;
-        }
     });
 
     // Mouse click
@@ -170,25 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
         mousey = e.clientY - box.top;
 
         // Game specific
-        // Control - volume
-        if(GAME_interaction_controlVolume.check()) {
-            if(volume >= 3) volume = 0;
-            else volume++;
-
-            if(!audioMain.paused) {
-                updateVolume();
-            }
-
-            return;
-        }
-
         // Preloader screen
-        if(GAME_curFrame == 0) {
+        if(GAME_curSection == 0) {
             if(GAME_interaction_screen.check()) {
-                GAME_curFrame += 1;
-                GAME_timer[0] = 5;
-                audioMain.play();
+                GAME_curSection++;
+                //audioMain.play();
                 updateVolume();
+                tl.play();
 
                 return;
             }
