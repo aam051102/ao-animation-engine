@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCanvas();
 
     // Game specific
+    let GAME_playAudio = 0;
     let GAME_curFrame = 0;
     let GAME_fade = 0;
     let GAME_fadeOut = false;
@@ -44,6 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
             allGifsLoaded &&
             allAudioLoaded
         ) {
+            // Play audio
+            if (GAME_playAudio == 1) {
+                audioMain.start();
+            }
+
             // Reset canvas
             ctxBuffer.clearRect(
                 0,
@@ -355,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Mouse click
-    DOMcanvas.addEventListener("mousedown", (e) => {
+    DOMcanvas.addEventListener("click", (e) => {
         e = e || window.event;
 
         let box = DOMcanvas.getBoundingClientRect();
@@ -368,9 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (volume >= 3) volume = 0;
             else volume++;
 
-            if (!audioMain.paused) {
-                updateVolume();
-            }
+            updateVolume();
 
             return;
         }
@@ -379,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (GAME_curFrame == 0) {
             if (GAME_interaction_screen.check()) {
                 GAME_curFrame += 1;
-                audioMain.play();
+                GAME_playAudio = 1;
                 updateVolume();
 
                 return;

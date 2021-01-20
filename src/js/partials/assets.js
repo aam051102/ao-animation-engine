@@ -60,7 +60,7 @@ gifJasprosespriteBack.setTransform(0, 0, -1, -1);
 /// --- Audio --- ///
 // Main background audio loop
 let audioMain = loadAudio("./assets/audio/Elevatorstuck_Meows.mp3");
-audioMain.loop = true;
+audioMain.looping = true;
 
 /// --- Fonts --- ///
 // Standard FontStuck

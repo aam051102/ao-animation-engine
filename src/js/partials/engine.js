@@ -1,3 +1,5 @@
+import "./src/js/partials/bwaudio.js";
+
 /// Variables
 // Canvas
 let DOMcanvas, DOMcanvasBuffer, DOMcanvasSprite;
@@ -151,8 +153,6 @@ function setupCanvas() {
     ctxSprite.webkitImageSmoothingEnabled = false;
     ctxSprite.msImageSmoothingEnabled = false;
     ctxSprite.imageSmoothingEnabled = false;
-
-    //fixRatio(ctxSprite, DOMcanvasSprite);
 }
 
 // Add padding
@@ -190,7 +190,7 @@ function hexToRgb(color) {
 // Set volume
 function updateVolume() {
     for (let i = 0; i < audio.length; i++) {
-        audio[i].volume = volume != 0 ? 0.33 * volume : 0;
+        audio[i].setVolume(volume != 0 ? 0.33 * volume : 0);
     }
 }
 
@@ -211,12 +211,13 @@ function loadSprite(path) {
 
 // Audio loading function
 function loadAudio(path) {
-    audio[currentAudio] = new Audio(path);
+    audio[currentAudio] = new BWAudio(path);
     loadedAudio[currentAudio] = false;
 
-    audio[currentAudio].addEventListener("loadeddata", function () {
-        loadedAudio[audio.indexOf(this)] = true;
-    });
+    let audioPos = currentAudio;
+    audio[currentAudio].oncanplay = () => {
+        loadedAudio[audioPos] = true;
+    };
 
     currentAudio++;
 
