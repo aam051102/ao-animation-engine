@@ -7,22 +7,41 @@ const connect = require("gulp-connect");
 const sass = require("gulp-sass");
 const babel = require("gulp-babel");
 const imagemin = require("gulp-imagemin");
-
+const cleanCSS = require("gulp-clean-css");
+const jsonminify = require("gulp-jsonminify");
+const htmlmin = require("gulp-htmlmin");
 
 sass.compiler = require("node-sass");
 
-
 function html(next) {
     gulp.src("./src/html/templates/*.ejs")
-        .pipe(ejs().on("error", err => { console.error(err); }))
-        .pipe(rename(function(path) {
-            if(path.basename !== "index") {
-                path.dirname = path.basename;
-                path.basename = "index";
-            }
+        .pipe(
+            ejs().on("error", (err) => {
+                console.error(err);
+            })
+        )
+        .pipe(
+            htmlmin({
+                collapseWhitespace: true,
+                collapseInlineTagWhitespace: true,
+                removeTagWhitespace: true,
+                removeComments: true,
+                minifyCSS: true,
+                minifyJS: true,
+                minifyURLs: true,
+                collapseBooleanAttributes: true,
+            })
+        )
+        .pipe(
+            rename(function (path) {
+                if (path.basename !== "index") {
+                    path.dirname = path.basename;
+                    path.basename = "index";
+                }
 
-            path.extname = ".html";
-        }))
+                path.extname = ".html";
+            })
+        )
         .pipe(gulp.dest("./dist/"))
         .pipe(connect.reload());
 
@@ -38,9 +57,19 @@ function images(next) {
     next();
 }
 
+function imagesBuild(next) {
+    gulp.src("./src/assets/images/**/*")
+        .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
+        .pipe(gulp.dest("./dist/assets/images/"))
+        .pipe(connect.reload());
+
+    next();
+}
+
 function scss(next) {
     gulp.src("./src/css/**/*.scss")
-        .pipe(sass().on("error", err => console.error(err)))
+        .pipe(sass().on("error", (err) => console.error(err)))
+        .pipe(cleanCSS())
         .pipe(gulp.dest("./dist/assets/css"))
         .pipe(connect.reload());
 
@@ -49,16 +78,20 @@ function scss(next) {
 
 function js(next) {
     gulp.src("./src/js/templates/**/*.js")
-        .pipe(jsImport().on("error", err => console.error(err)))
-        .pipe(babel({
-            presets: ['@babel/env']
-        }).on("error", err => console.log(err)))
-        .pipe(minify({
-            ext: {
-                min: ".js"
-            },
-            noSource: true
-        }).on("error", err => console.error(err)))
+        .pipe(jsImport().on("error", (err) => console.error(err)))
+        .pipe(
+            babel({
+                presets: ["@babel/preset-env"],
+            }).on("error", (err) => console.log(err))
+        )
+        .pipe(
+            minify({
+                ext: {
+                    min: ".js",
+                },
+                noSource: true,
+            }).on("error", (err) => console.error(err))
+        )
         .pipe(gulp.dest("./dist/assets/js"))
         .pipe(connect.reload());
 
@@ -74,7 +107,13 @@ function audio(next) {
 }
 
 function fonts(next) {
-    gulp.src("./src/assets/fonts/*")
+    gulp.src("./src/assets/fonts/*.png")
+        .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
+        .pipe(gulp.dest("./dist/assets/fonts"))
+        .pipe(connect.reload());
+
+    gulp.src("./src/assets/fonts/*.json")
+        .pipe(jsonminify())
         .pipe(gulp.dest("./dist/assets/fonts"))
         .pipe(connect.reload());
 
@@ -105,7 +144,7 @@ function watchFonts() {
     gulp.watch("./src/assets/fonts/**/*", { ignoreInitial: false }, fonts);
 }
 
-gulp.task("dev", function(next) {
+gulp.task("dev", function (next) {
     watchHtml();
     watchImages();
     watchScss();
@@ -114,19 +153,19 @@ gulp.task("dev", function(next) {
     watchFonts();
     connect.server({
         livereload: true,
-        root: "dist"
+        root: "dist",
     });
 
     next();
 });
 
-gulp.task("build", function(next) {
+gulp.task("build", function (next) {
     js(next);
     scss(next);
-    images(next);
+    imagesBuild(next);
     audio(next);
     html(next);
     fonts(next);
-    
+
     next();
 });
