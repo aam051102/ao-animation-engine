@@ -308,7 +308,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (loadedFonts[fonts.get("FontStuck").index]) {
-                const percentage = `${(100 / totalAssets) * loadedAssets}%`;
+                const percentage = `${Math.floor(
+                    (100 / totalAssets) * loadedAssets
+                )}%`;
 
                 // Percentage text
                 Text.drawText(
@@ -335,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
             0,
             0
         );
-    }, 41);
+    }, 1000 / 24);
 
     // Mouse move
     DOMcanvas.addEventListener("mousemove", (e) => {
