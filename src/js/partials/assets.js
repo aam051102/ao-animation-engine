@@ -1,26 +1,19 @@
-/// --- Sprites --- ///
+///--- Sprites ---///
 // Volume control
-let sprVolume = [];
-sprVolume[0] = loadSprite("./assets/images/controls/Volume_01.png");
-sprVolume[1] = loadSprite("./assets/images/controls/Volume_02.png");
-sprVolume[2] = loadSprite("./assets/images/controls/Volume_03.png");
-sprVolume[3] = loadSprite("./assets/images/controls/Volume_04.png");
+const sprVolume = [];
+sprVolume[0] = loadSprite("./assets/images/controls/volume-0.png");
+sprVolume[1] = loadSprite("./assets/images/controls/volume-1.png");
+sprVolume[2] = loadSprite("./assets/images/controls/volume-2.png");
+sprVolume[3] = loadSprite("./assets/images/controls/volume-3.png");
 
+///--- Gifs ---///
 
-/// --- Gifs --- ///
-// Preloader
-let gifPreloader = new AnimatedGif();
-gifPreloader.loadFrames("./assets/images/animations/Preloader/Preloader", 2, "png", [
-    0, 0
-]);
-gifPreloader.setTransform(0, 0, -1, -1);
-gifPreloader.start();
+///--- Audio ---///
 
-
-/// --- Audio --- ///
-// Main background audio loop
-//let audioMain = loadAudio("./assets/audio/main.mp3");
-//audioMain.loop = true;
-
-
-/// --- Fonts --- ///
+///--- Fonts ---///
+// Standard FontStuck
+Text.loadFont(
+    "FontStuck",
+    "./assets/fonts/fonstuck.png",
+    "./assets/fonts/fontstuck.json"
+);
