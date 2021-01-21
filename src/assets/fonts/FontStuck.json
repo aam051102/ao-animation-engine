@@ -500,6 +500,34 @@
             "y": 0,
             "width": 7,
             "height": 14
+        },
+        {
+            "glyph": "*",
+            "x": 564,
+            "y": 0,
+            "width": 7,
+            "height": 14
+        },
+        {
+            "glyph": "#",
+            "x": 571,
+            "y": 0,
+            "width": 7,
+            "height": 14
+        },
+        {
+            "glyph": "$",
+            "x": 579,
+            "y": 0,
+            "width": 6,
+            "height": 14
+        },
+        {
+            "glyph": "%",
+            "x": 586,
+            "y": 0,
+            "width": 6,
+            "height": 14
         }
     ]
 }

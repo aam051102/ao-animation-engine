@@ -39,6 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Main loop
     let loop = setInterval(() => {
+        // Reset canvas
+        ctxBuffer.clearRect(
+            0,
+            0,
+            DOMcanvasBuffer.width,
+            DOMcanvasBuffer.height
+        );
+
         if (
             allSpritesLoaded &&
             allFontsLoaded &&
@@ -49,14 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (GAME_playAudio == 1) {
                 audioMain.start();
             }
-
-            // Reset canvas
-            ctxBuffer.clearRect(
-                0,
-                0,
-                DOMcanvasBuffer.width,
-                DOMcanvasBuffer.height
-            );
 
             if (GAME_curFrame === 0) {
                 gifPreloader.update();
@@ -296,18 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Controls
             ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
-
-            // Update main canvas with buffer
-            ctx.putImageData(
-                ctxBuffer.getImageData(
-                    0,
-                    0,
-                    DOMcanvasBuffer.width,
-                    DOMcanvasBuffer.height
-                ),
-                0,
-                0
-            );
         } else {
             // Draw preloader
             if (loadedGifs[gifs.indexOf(gifPreloader)]) {
@@ -319,8 +307,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctxBuffer.drawImage(sprVolume[volume], 3, 2, 22.95, 21.65); // Volume
             }
 
+            if (loadedFonts[fonts.get("FontStuck").index]) {
+                const percentage = `${(100 / totalAssets) * loadedAssets}%`;
+
+                // Percentage text
+                Text.drawText(
+                    percentage,
+                    325 - Text.getTextWidth(percentage, "FontStuck", 1) / 2,
+                    400,
+                    "FontStuck",
+                    hexToRgb("#000000"),
+                    1
+                );
+            }
+
             checkLoadAssets();
         }
+
+        // Update main canvas with buffer
+        ctx.putImageData(
+            ctxBuffer.getImageData(
+                0,
+                0,
+                DOMcanvasBuffer.width,
+                DOMcanvasBuffer.height
+            ),
+            0,
+            0
+        );
     }, 41);
 
     // Mouse move

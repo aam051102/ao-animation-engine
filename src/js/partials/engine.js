@@ -12,6 +12,10 @@ let volume = 3;
 let mousex = 0;
 let mousey = 0;
 
+// Percentage counter
+let totalAssets = 0;
+let loadedAssets = 0;
+
 // Sprites
 let sprites = [];
 let loadedSprites = [];
@@ -203,9 +207,11 @@ function loadSprite(path) {
     sprites[currentSprite] = new Image();
     loadedSprites[currentSprite] = false;
     sprites[currentSprite].src = path;
+    totalAssets++;
 
     sprites[currentSprite].onload = function () {
         loadedSprites[sprites.indexOf(this)] = true;
+        loadedAssets++;
     };
 
     currentSprite++;
@@ -217,10 +223,12 @@ function loadSprite(path) {
 function loadAudio(path) {
     audio[currentAudio] = new BWAudio(path);
     loadedAudio[currentAudio] = false;
+    totalAssets++;
 
     let audioPos = currentAudio;
     audio[currentAudio].oncanplay = () => {
         loadedAudio[audioPos] = true;
+        loadedAssets++;
     };
 
     currentAudio++;
@@ -255,6 +263,9 @@ class Text {
     // Text loading function
     static loadFont(font, src, data) {
         let thisFont = new TextFont(src);
+        let thisFontPos = thisFont.index;
+        totalAssets++;
+        loadedFonts[thisFontPos] = false;
 
         // Glyph loading
         let xmlhttp = new XMLHttpRequest();
@@ -276,6 +287,9 @@ class Text {
                 thisFont.breakHeight = myObj.breakHeight;
                 thisFont.lineHeight = myObj.lineHeight;
                 thisFont.spaceWidth = myObj.spaceWidth;
+
+                loadedAssets++;
+                loadedFonts[thisFontPos] = true;
             }
         };
         xmlhttp.open("GET", data, true);
@@ -320,13 +334,14 @@ class Text {
                     spriteShortcut.z * size,
                     spriteShortcut.w * size
                 );
+
+                // Glyph movement
+                offsetX +=
+                    (spriteShortcut.z + fontShortcut.glyphSpacing) * size;
             } else {
                 console.log("Glyph missing: " + text[i]);
                 break;
             }
-
-            // Glyph movement
-            offsetX += (spriteShortcut.z + fontShortcut.glyphSpacing) * size;
         }
 
         // Recolour
@@ -366,6 +381,8 @@ class TextFont {
         this.breakHeight = 0;
         this.lineHeight = 0;
         this.spaceWidth = 0;
+
+        this.index = Object.entries(fonts).length;
     }
 
     // Add sprite
