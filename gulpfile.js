@@ -10,6 +10,9 @@ const imagemin = require("gulp-imagemin");
 const cleanCSS = require("gulp-clean-css");
 const jsonminify = require("gulp-jsonminify");
 const htmlmin = require("gulp-htmlmin");
+const gifFrames = require("gif-frames");
+const fs = require("fs");
+const path = require("path");
 
 sass.compiler = require("node-sass");
 
@@ -60,40 +63,11 @@ function images(next) {
 }
 
 function imagesBuild(next) {
-    let assetMap = {};
-    let assetMapEntries = 0;
-
     // Process files
-    gulp.src("./src/assets/images/**/*.*")
+    gulp.src(["./src/assets/images/**/*.png", "./temp/assets/images/**/*.png"])
         .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
-        .pipe(
-            rename((path, file) => {
-                // Generate asset map and rename files
-                let assetMapName = "";
-
-                for (
-                    let i = assetMapEntries;
-                    i >= 0;
-                    i = Math.floor(i / 26) - 1
-                ) {
-                    assetMapName =
-                        String.fromCharCode((i % 26) + charValueA) +
-                        assetMapName;
-                }
-
-                assetMap[path.basename] = assetMapName;
-                assetMapEntries++;
-                path.basename = assetMap[path.basename];
-            })
-        )
         .pipe(gulp.dest("./dist/assets/images/"))
-        .pipe(connect.reload())
-        .on("end", () => {
-            // Generate code using asset map
-            Object.entries(assetMap).forEach((asset) => {
-                console.log(asset);
-            });
-        });
+        .pipe(connect.reload());
 
     next();
 }
@@ -108,12 +82,58 @@ function scss(next) {
     next();
 }
 
+function splitGifs(next) {
+    // Handle gifs
+    fs.mkdirSync("./temp/assets/images/", { recursive: true });
+
+    const imageDirContents = fs.readdirSync("./src/assets/images/");
+    imageDirContents.forEach((image) => {
+        const extname = path.extname(image);
+        const imageName = path.basename(image, extname);
+
+        if (extname === ".gif") {
+            gifFrames(
+                {
+                    url: `./src/assets/images/${image}`,
+                    frames: "all",
+                    outputType: "png",
+                    cumulative: true,
+                },
+                (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                }
+            )
+                .then((frameData) => {
+                    frameData.forEach(async (frame) => {
+                        frame
+                            .getImage()
+                            .pipe(
+                                fs.createWriteStream(
+                                    `./temp/assets/images/${imageName}-${frame.frameIndex}.png`
+                                )
+                            );
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    });
+
+    next();
+}
+
 function js(next) {
     gulp.src("./src/js/templates/**/*.js")
         .pipe(jsImport().on("error", (err) => console.error(err)))
         .pipe(
             babel({
                 presets: ["@babel/preset-env"],
+                plugins: [
+                    ["minify-mangle-names", { topLevel: true, eval: true }],
+                ],
             }).on("error", (err) => console.log(err))
         )
         .pipe(
@@ -192,12 +212,21 @@ gulp.task("dev", function (next) {
 });
 
 gulp.task("build", function (next) {
+    //fs.rmSync("./temp", { recursive: true });
+    //fs.rmSync("./dist", { recursive: true });
+
     js(next);
     scss(next);
     imagesBuild(next);
     audio(next);
     html(next);
     fonts(next);
+
+    next();
+});
+
+gulp.task("split-gifs", function (next) {
+    splitGifs(next);
 
     next();
 });

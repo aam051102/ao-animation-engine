@@ -114,6 +114,18 @@ function fixRatio(context, canvas) {
 
 // Set up canvas
 function setupCanvas() {
+    // Buffer canvas and context
+    DOMcanvasBuffer = document.createElement("canvas");
+    DOMcanvasBuffer.id = "bufferCanvas";
+    DOMcanvasBuffer.width = DOMcanvas.width;
+    DOMcanvasBuffer.height = DOMcanvas.height;
+
+    // Sprite canvas and context
+    DOMcanvasSprite = document.createElement("canvas");
+    DOMcanvasSprite.id = "spriteCanvas";
+    DOMcanvasSprite.width = DOMcanvas.width;
+    DOMcanvasSprite.height = DOMcanvas.height;
+
     // Main canvas context
     ctx = DOMcanvas.getContext("2d");
     ctx.fillStyle = "#000000";
@@ -125,11 +137,7 @@ function setupCanvas() {
 
     fixRatio(ctx, DOMcanvas);
 
-    // Buffer canvas and context
-    DOMcanvasBuffer = document.createElement("canvas");
-    DOMcanvasBuffer.id = "bufferCanvas";
-    DOMcanvasBuffer.width = DOMcanvas.width;
-    DOMcanvasBuffer.height = DOMcanvas.height;
+    // Buffer
     document.body.appendChild(DOMcanvasBuffer);
 
     ctxBuffer = DOMcanvasBuffer.getContext("2d");
@@ -142,11 +150,7 @@ function setupCanvas() {
 
     fixRatio(ctxBuffer, DOMcanvasBuffer);
 
-    // Sprite canvas and context
-    DOMcanvasSprite = document.createElement("canvas");
-    DOMcanvasSprite.id = "spriteCanvas";
-    DOMcanvasSprite.width = DOMcanvas.width;
-    DOMcanvasSprite.height = DOMcanvas.height;
+    // Sprite
     document.body.appendChild(DOMcanvasSprite);
 
     ctxSprite = DOMcanvasSprite.getContext("2d");
