@@ -13,6 +13,8 @@ const htmlmin = require("gulp-htmlmin");
 
 sass.compiler = require("node-sass");
 
+const charValueA = "a".charCodeAt(0);
+
 function html(next) {
     gulp.src("./src/html/templates/*.ejs")
         .pipe(
@@ -58,10 +60,40 @@ function images(next) {
 }
 
 function imagesBuild(next) {
-    gulp.src("./src/assets/images/**/*")
+    let assetMap = {};
+    let assetMapEntries = 0;
+
+    // Process files
+    gulp.src("./src/assets/images/**/*.*")
         .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
+        .pipe(
+            rename((path, file) => {
+                // Generate asset map and rename files
+                let assetMapName = "";
+
+                for (
+                    let i = assetMapEntries;
+                    i >= 0;
+                    i = Math.floor(i / 26) - 1
+                ) {
+                    assetMapName =
+                        String.fromCharCode((i % 26) + charValueA) +
+                        assetMapName;
+                }
+
+                assetMap[path.basename] = assetMapName;
+                assetMapEntries++;
+                path.basename = assetMap[path.basename];
+            })
+        )
         .pipe(gulp.dest("./dist/assets/images/"))
-        .pipe(connect.reload());
+        .pipe(connect.reload())
+        .on("end", () => {
+            // Generate code using asset map
+            Object.entries(assetMap).forEach((asset) => {
+                console.log(asset);
+            });
+        });
 
     next();
 }

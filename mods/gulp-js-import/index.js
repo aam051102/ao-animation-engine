@@ -24,7 +24,7 @@ module.exports = function (options) {
                 "data:image/" +
                 path.split(".").pop() +
                 ";base64," +
-                new Buffer(fs.readFileSync(path), "binary").toString("base64");
+                Buffer.from(fs.readFileSync(path), "binary").toString("base64");
         } else {
             content = fs.readFileSync(path, {
                 encoding: "utf8",
@@ -77,7 +77,7 @@ module.exports = function (options) {
             return;
         }
 
-        file.contents = new Buffer(content);
+        file.contents = Buffer.from(content, "utf8");
         file.path = gutil.replaceExtension(file.path, ".js");
         !options.hideConsole && console.log("ImportJS finished.");
         cb(null, file);
