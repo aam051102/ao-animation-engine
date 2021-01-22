@@ -2,7 +2,7 @@ import "./src/js/partials/engine.js";
 import "./src/js/partials/assets.js";
 
 /*
-Title: 
+Title: [S] Vriska: W8ke Up.
 Origin: Act Omega
 Programmer: MadCreativity
 */
