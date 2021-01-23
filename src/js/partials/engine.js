@@ -1,3 +1,4 @@
+import "./src/js/partials/polyfills.js";
 import "./src/js/partials/bwaudio.js";
 
 /// Variables
@@ -449,7 +450,7 @@ class AnimatedGif {
         for (let i = 0; i < amount; i++) {
             this.frames[i] = new Image();
             this.frames[i].src =
-                path + "_" + addPadding(i + 1, "0", 2) + "." + fileType;
+                path + "-" + addPadding(i, "0", 1) + "." + fileType;
 
             this.loadedFrames[i] = false;
 
