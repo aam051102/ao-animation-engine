@@ -22,9 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let GAME_interaction_controlVolume = new Interactable(2, 3, 23, 22);
 
     // Main loop
+    let lastTimestamp = 0;
+
     const step = (timestamp) => {
-        setTimeout(() => {
-            requestAnimationFrame(step);
+        if (timestamp - lastTimestamp >= 1000 / 24) {
+            lastTimestamp = timestamp;
 
             // Reset canvas
             ctxBuffer.clearRect(
@@ -109,7 +111,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 0,
                 0
             );
-        }, 1000 / 24);
+        }
+
+        requestAnimationFrame(step);
     };
 
     requestAnimationFrame(step);
